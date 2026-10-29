@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>O Guião</title>
+<meta name="description" content="Prepara reuniões e audiências antes de entrar na sala: o que dizer, o que perguntar e o que teme ouvir. Por Ana Marta Soares, Especialista em IA aplicada ao Direito.">
+<meta name="theme-color" content="#7a2e2e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icone-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="O Guião">
+<style>
+  @font-face{font-family:"Fraunces";src:url("fonts/fraunces-600.woff2") format("woff2");font-weight:600;font-display:swap;}
+  @font-face{font-family:"Inter";src:url("fonts/inter-400.woff2") format("woff2");font-weight:400;font-display:swap;}
+  @font-face{font-family:"Inter";src:url("fonts/inter-500.woff2") format("woff2");font-weight:500;font-display:swap;}
+  @font-face{font-family:"Inter";src:url("fonts/inter-600.woff2") format("woff2");font-weight:600;font-display:swap;}
+
+  /* Layout: coluna única de secções para preencher; o guião gera-se numa vista à parte.
+     Paleta bordô (toga, gravidade da sala) sobre neutro quente. */
+  :root{
+    --bg:#f4f1ec; --surface:#fff; --ink:#1e1a18; --ink-soft:#5c544f; --line:#ddd4ca;
+    --accent:#7a2e2e; --accent-soft:#f0e3e0; --accent-ink:#7a2e2e;
+    --fear:#8a3a12; --fear-soft:#f7e9df; --fear-line:#e2b593;
+    --fdisplay:"Fraunces",Georgia,serif; --fbody:"Inter",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#171415; --surface:#201c1e; --ink:#ece7e3; --ink-soft:#a79d97; --line:#352e30;
+    --accent:#d98a8a; --accent-soft:#2c1e1f; --accent-ink:#e4a0a0;
+    --fear:#d89a6a; --fear-soft:#2c2013; --fear-line:#5a4326; color-scheme:dark;}}
+  :root[data-theme="dark"]{
+    --bg:#171415; --surface:#201c1e; --ink:#ece7e3; --ink-soft:#a79d97; --line:#352e30;
+    --accent:#d98a8a; --accent-soft:#2c1e1f; --accent-ink:#e4a0a0;
+    --fear:#d89a6a; --fear-soft:#2c2013; --fear-line:#5a4326; color-scheme:dark;}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  [hidden]{display:none !important;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--fbody);line-height:1.5;}
+  .wrap{max-width:760px;margin:0 auto;
+    padding-left:max(16px,env(safe-area-inset-left,0px));
+    padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0;}
+
+  header{padding-block:2.2rem 1.2rem;border-bottom:1px solid var(--line);}
+  .brandrow{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+  .eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:600;margin:0 0 .5rem;}
+  h1{font-family:var(--fdisplay);font-weight:600;font-size:clamp(1.9rem,5vw,2.8rem);line-height:1.05;letter-spacing:-.01em;margin:0 0 .6rem;}
+  .lede{color:var(--ink-soft);max-width:60ch;font-size:1.02rem;margin:0;}
+  .install{font-family:inherit;font-size:.85rem;font-weight:600;color:var(--accent-ink);background:var(--accent-soft);border:1px solid var(--accent);border-radius:8px;padding:.5rem .9rem;cursor:pointer;white-space:nowrap;}
+
+  .modos{display:flex;gap:.6rem;margin:1.3rem 0 .2rem;flex-wrap:wrap;}
+  .modo{flex:1;min-width:160px;font-family:inherit;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem;cursor:pointer;}
+  .modo[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-soft);}
+  .modo b{display:block;font-family:var(--fdisplay);font-size:1.05rem;font-weight:600;}
+  .modo small{color:var(--ink-soft);font-size:.82rem;}
+
+  .viewswitch{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:.25rem;margin:1.2rem 0 0;gap:.2rem;}
+  .viewswitch button{font-family:inherit;font-size:.88rem;font-weight:600;color:var(--ink-soft);background:none;border:none;border-radius:999px;padding:.45rem 1.1rem;cursor:pointer;}
+  .viewswitch button[aria-selected="true"]{background:var(--accent);color:#fff;}
+
+  main{padding-block:1.6rem 1rem;}
+  .campo-topo{margin-bottom:1.3rem;}
+  .campo-topo label{display:block;font-weight:600;font-size:.9rem;margin-bottom:.35rem;}
+  input[type="text"]{width:100%;font-family:inherit;font-size:.98rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.6rem .7rem;}
+  input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+
+  .seccao{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.1rem 1.2rem;margin-bottom:1.1rem;}
+  .seccao.medo{background:var(--fear-soft);border-color:var(--fear-line);}
+  .seccao > h2{font-family:var(--fdisplay);font-size:1.12rem;font-weight:600;margin:0 0 .2rem;display:flex;align-items:center;gap:.5rem;}
+  .seccao.medo > h2{color:var(--fear);}
+  .seccao .desc{color:var(--ink-soft);font-size:.84rem;margin:0 0 .8rem;}
+  .seccao.medo .desc{color:var(--fear);}
+  textarea{width:100%;font-family:inherit;font-size:.95rem;line-height:1.5;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem;resize:vertical;min-height:3rem;}
+
+  /* pares pergunta/resposta temida */
+  .par{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.6rem;}
+  @media (max-width:560px){.par{grid-template-columns:1fr;}}
+  .par .rotulo{font-size:.76rem;font-weight:600;color:var(--ink-soft);margin-bottom:.25rem;display:block;}
+  .par .medo-rotulo{color:var(--fear);}
+  .addbtn{font-family:inherit;font-size:.82rem;font-weight:600;color:var(--accent-ink);background:none;border:1px dashed var(--line);border-radius:7px;padding:.45rem .8rem;cursor:pointer;width:100%;}
+  .addbtn:hover{border-color:var(--accent);}
+
+  /* guião final */
+  .guiao{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:2rem;}
+  .guiao .gtopo{border-bottom:2px solid var(--accent);padding-bottom:.9rem;margin-bottom:1.3rem;}
+  .guiao .gtopo .tipo{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);font-weight:600;}
+  .guiao .gtopo h2{font-family:var(--fdisplay);font-size:1.5rem;font-weight:600;margin:.2rem 0 0;}
+  .guiao h3{font-family:var(--fdisplay);font-size:1.05rem;font-weight:600;margin:1.3rem 0 .4rem;}
+  .guiao h3.medo{color:var(--fear);}
+  .guiao ul{margin:.2rem 0;padding-left:1.1rem;}
+  .guiao li{margin-bottom:.4rem;font-size:.92rem;}
+  .guiao .qr{margin-bottom:.7rem;font-size:.92rem;}
+  .guiao .qr .q{font-weight:600;}
+  .guiao .qr .r{color:var(--ink-soft);padding-left:1rem;border-left:2px solid var(--fear-line);margin-top:.15rem;}
+  .guiao .vazio{color:var(--ink-soft);font-style:italic;font-size:.9rem;}
+  .guiao .grodape{margin-top:1.6rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.8rem;color:var(--ink-soft);}
+  .guiao .seal{font-family:var(--fdisplay);font-style:italic;color:var(--ink);}
+
+  .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.1rem;}
+  .btn{font-family:inherit;font-size:.85rem;font-weight:600;border-radius:8px;padding:.55rem 1rem;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .btn.done{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+  .guardados{margin-top:1.4rem;border-top:1px solid var(--line);padding-top:1rem;}
+  .guardados h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin:0 0 .5rem;}
+  .guardados ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.35rem;}
+  .guardados li{display:flex;align-items:center;gap:.5rem;font-size:.86rem;}
+  .guardados li button.load{flex:1;text-align:left;background:none;border:none;color:var(--accent-ink);cursor:pointer;font-family:inherit;font-size:.86rem;padding:.2rem 0;}
+  .guardados li button.del{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:1.1rem;}
+
+  footer{border-top:1px solid var(--line);padding-block:1.4rem 2.4rem;color:var(--ink-soft);font-size:.82rem;text-align:center;margin-top:1.5rem;}
+  footer strong{color:var(--ink);font-weight:600;}
+  .seal{font-family:var(--fdisplay);font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brandrow">
+      <div>
+        <p class="eyebrow">Preparação para a sala</p>
+        <h1>O Guião</h1>
+      </div>
+      <button class="install" id="install" hidden>Instalar aplicação</button>
+    </div>
+    <p class="lede">O que se ganha ou se perde numa reunião ou numa audiência decide-se antes de entrar na sala. Estruture o que vai dizer, o que vai perguntar e, sobretudo, o que teme ouvir. No fim, leve um guião de uma página.</p>
+    <div class="modos" role="group" aria-label="Modo">
+      <button class="modo" id="modo-reuniao" aria-pressed="true"><b>Reunião</b><small>Cliente, contraparte, negociação</small></button>
+      <button class="modo" id="modo-audiencia" aria-pressed="false"><b>Audiência</b><small>Julgamento, inquirição, alegações</small></button>
+    </div>
+    <div class="viewswitch" role="tablist">
+      <button role="tab" id="tab-preparar" aria-selected="true">Preparar</button>
+      <button role="tab" id="tab-guiao" aria-selected="false">Ver o guião</button>
+    </div>
+  </header>
+
+  <!-- VISTA PREPARAR -->
+  <main id="vista-preparar">
+    <div class="campo-topo">
+      <label for="titulo" id="titulo-label">Que reunião é esta?</label>
+      <input type="text" id="titulo" maxlength="100" placeholder="Ex.: reunião com o cliente sobre a proposta de acordo">
+    </div>
+    <div id="seccoes"></div>
+    <div class="guardados" id="guardados" hidden>
+      <h3>Preparações guardadas neste dispositivo</h3>
+      <ul id="listaguardados"></ul>
+    </div>
+  </main>
+
+  <!-- VISTA GUIÃO -->
+  <main id="vista-guiao" hidden>
+    <div class="guiao" id="guiaoFinal"></div>
+    <div class="actions">
+      <button class="btn primary" id="copiar" type="button">Copiar guião</button>
+      <button class="btn" id="guardar" type="button">Guardar</button>
+    </div>
+  </main>
+
+  <footer>
+    <p class="seal"><strong>Ana Marta Soares</strong>, Especialista em IA aplicada ao Direito</p>
+    <p>Ferramenta de preparação. Tudo o que escreve fica apenas no seu dispositivo.</p>
+  </footer>
+</div>
+
+<script>
+  function el(id){return document.getElementById(id);}
+
+  // Definição das secções de cada modo.
+  // tipo: "texto" (uma área), "lista" (linhas que viram bullets), "pares" (pergunta + resposta temida)
+  var MODOS={
+    reuniao:{
+      tituloLabel:"Que reunião é esta?",
+      tituloPlaceholder:"Ex.: reunião com o cliente sobre a proposta de acordo",
+      rotulo:"Reunião",
+      seccoes:[
+        {id:"objmin", tipo:"texto", h:"Objectivo mínimo e objectivo ideal", d:"O que não pode sair daqui sem conseguir, e o que seria o melhor cenário. Separa os dois.", ph:"Mínimo: …\nIdeal: …"},
+        {id:"dizer", tipo:"lista", h:"Os pontos que tenho de dizer", d:"As três ou quatro coisas que, aconteça o que acontecer, têm de ficar ditas.", ph:"Um ponto por linha"},
+        {id:"perguntar", tipo:"lista", h:"As perguntas que preciso de fazer", d:"O que preciso de saber e que só esta reunião me dá.", ph:"Uma pergunta por linha"},
+        {id:"medos", tipo:"pares", h:"O que temo ouvir", d:"As objecções ou respostas que mais me preocupam, e a réplica que preparo a frio, antes de as ouvir a quente.", medo:true, qLabel:"Objecção que temo", rLabel:"A minha resposta"},
+        {id:"batna", tipo:"texto", h:"Se não houver acordo", d:"A minha melhor alternativa fora desta mesa. É o que me dá poder para não ceder ao que não devo.", ph:"A alternativa se a reunião falhar"}
+      ]
+    },
+    audiencia:{
+      tituloLabel:"Que audiência é esta?",
+      tituloPlaceholder:"Ex.: julgamento, inquirição da testemunha da Ré",
+      rotulo:"Audiência",
+      seccoes:[
+        {id:"provar", tipo:"lista", h:"Os factos que tenho de provar", d:"Aquilo que, se não ficar provado, faz o caso cair. Por ordem de importância.", ph:"Um facto por linha"},
+        {id:"perguntas", tipo:"lista", h:"As perguntas que vou fazer", d:"Perguntas fechadas, uma por linha, na ordem em que as farei. A quem, e para arrancar o quê.", ph:"Uma pergunta por linha"},
+        {id:"naofazer", tipo:"lista", h:"As perguntas que NÃO devo fazer", d:"Aquelas cuja resposta não controlo e me podem prejudicar.", ph:"Uma por linha"},
+        {id:"docs", tipo:"lista", h:"Documentos a ter à mão", d:"O que exibo, e em que momento exacto o ponho em cima da mesa.", ph:"Documento + quando o uso"},
+        {id:"medos", tipo:"pares", h:"O que temo ouvir", d:"As respostas que a testemunha ou a outra parte podem dar e que me desarmam, e a forma de as contornar, preparada antes.", medo:true, qLabel:"Resposta que temo", rLabel:"Como a contorno"},
+        {id:"contra", tipo:"lista", h:"O que a outra parte me vai perguntar", d:"As perguntas que a contraparte fará, para eu não ser apanhado de surpresa.", ph:"Uma por linha"}
+      ]
+    }
+  };
+
+  var estado={modo:"reuniao"};
+  // dados: {modo: {secId: valor}} ; valor é string (texto/lista) ou array de {q,r} (pares)
+  var dados={reuniao:{}, audiencia:{}};
+
+  function construirSeccoes(){
+    var cfg=MODOS[estado.modo];
+    el("titulo-label").textContent=cfg.tituloLabel;
+    el("titulo").placeholder=cfg.tituloPlaceholder;
+    el("titulo").value=dados[estado.modo]._titulo||"";
+    var cont=el("seccoes"); cont.innerHTML="";
+    cfg.seccoes.forEach(function(s){
+      var div=document.createElement("div");
+      div.className="seccao"+(s.medo?" medo":"");
+      var html='<h2>'+s.h+'</h2><p class="desc">'+s.d+'</p>';
+      div.innerHTML=html;
+      if(s.tipo==="texto" || s.tipo==="lista"){
+        var ta=document.createElement("textarea");
+        ta.id="f_"+s.id; ta.placeholder=s.ph||""; if(s.tipo==="lista") ta.rows=4;
+        ta.value=dados[estado.modo][s.id]||"";
+        ta.addEventListener("input", function(){ dados[estado.modo][s.id]=ta.value; });
+        div.appendChild(ta);
+      } else if(s.tipo==="pares"){
+        var wrap=document.createElement("div"); wrap.id="pares_"+s.id;
+        div.appendChild(wrap);
+        var add=document.createElement("button");
+        add.type="button"; add.className="addbtn"; add.textContent="+ acrescentar";
+        add.addEventListener("click", function(){ adicionarPar(s, wrap, {q:"",r:""}); });
+        div.appendChild(add);
+        var arr=dados[estado.modo][s.id];
+        if(!arr || !arr.length){ arr=[{q:"",r:""}]; dados[estado.modo][s.id]=arr; }
+        arr.forEach(function(p){ adicionarPar(s, wrap, p, true); });
+      }
+      cont.appendChild(div);
+    });
+  }
+
+  function adicionarPar(s, wrap, par, existente){
+    var arr=dados[estado.modo][s.id] || (dados[estado.modo][s.id]=[]);
+    if(!existente) arr.push(par);
+    var row=document.createElement("div"); row.className="par";
+    var c1=document.createElement("div");
+    c1.innerHTML='<span class="rotulo medo-rotulo">'+s.qLabel+'</span>';
+    var t1=document.createElement("textarea"); t1.value=par.q||""; t1.rows=2;
+    t1.addEventListener("input", function(){ par.q=t1.value; });
+    c1.appendChild(t1);
+    var c2=document.createElement("div");
+    c2.innerHTML='<span class="rotulo">'+s.rLabel+'</span>';
+    var t2=document.createElement("textarea"); t2.value=par.r||""; t2.rows=2;
+    t2.addEventListener("input", function(){ par.r=t2.value; });
+    c2.appendChild(t2);
+    row.appendChild(c1); row.appendChild(c2);
+    wrap.appendChild(row);
+  }
+
+  el("titulo").addEventListener("input", function(){ dados[estado.modo]._titulo=el("titulo").value; });
+
+  // Modos
+  function escolherModo(m){
+    estado.modo=m;
+    el("modo-reuniao").setAttribute("aria-pressed", m==="reuniao"?"true":"false");
+    el("modo-audiencia").setAttribute("aria-pressed", m==="audiencia"?"true":"false");
+    construirSeccoes();
+  }
+  el("modo-reuniao").addEventListener("click", function(){ escolherModo("reuniao"); });
+  el("modo-audiencia").addEventListener("click", function(){ escolherModo("audiencia"); });
+
+  // Gerar o guião
+  function linhasDe(txt){ return (txt||"").split("\n").map(function(l){return l.trim();}).filter(Boolean); }
+
+  function gerarGuiao(){
+    var cfg=MODOS[estado.modo], d=dados[estado.modo];
+    var titulo=(d._titulo||"").trim() || (estado.modo==="reuniao"?"Reunião":"Audiência");
+    var H=[];
+    H.push('<div class="gtopo"><div class="tipo">Guião de '+cfg.rotulo.toLowerCase()+'</div><h2>'+escapar(titulo)+'</h2></div>');
+    cfg.seccoes.forEach(function(s){
+      if(s.tipo==="texto"){
+        var v=(d[s.id]||"").trim();
+        H.push('<h3'+(s.medo?' class="medo"':'')+'>'+s.h+'</h3>');
+        H.push(v? '<p style="font-size:.92rem;white-space:pre-wrap;">'+escapar(v)+'</p>' : '<p class="vazio">(por preencher)</p>');
+      } else if(s.tipo==="lista"){
+        var ls=linhasDe(d[s.id]);
+        H.push('<h3'+(s.medo?' class="medo"':'')+'>'+s.h+'</h3>');
+        H.push(ls.length? '<ul>'+ls.map(function(x){return '<li>'+escapar(x)+'</li>';}).join("")+'</ul>' : '<p class="vazio">(por preencher)</p>');
+      } else if(s.tipo==="pares"){
+        var arr=(d[s.id]||[]).filter(function(p){return (p.q||"").trim()||(p.r||"").trim();});
+        H.push('<h3 class="medo">'+s.h+'</h3>');
+        if(arr.length){
+          arr.forEach(function(p){
+            H.push('<div class="qr"><div class="q">'+escapar((p.q||"").trim()||"—")+'</div>'+((p.r||"").trim()?'<div class="r">'+escapar(p.r.trim())+'</div>':'')+'</div>');
+          });
+        } else { H.push('<p class="vazio">(por preencher)</p>'); }
+      }
+    });
+    H.push('<div class="grodape"><span class="seal">Ana Marta Soares</span>, Especialista em IA aplicada ao Direito</div>');
+    el("guiaoFinal").innerHTML=H.join("");
+  }
+  function escapar(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  // Texto puro para copiar
+  function guiaoTexto(){
+    var cfg=MODOS[estado.modo], d=dados[estado.modo];
+    var titulo=(d._titulo||"").trim() || cfg.rotulo;
+    var L=["GUIÃO DE "+cfg.rotulo.toUpperCase(), titulo, ""];
+    cfg.seccoes.forEach(function(s){
+      L.push(s.h.toUpperCase());
+      if(s.tipo==="texto"){
+        var v=(d[s.id]||"").trim(); L.push(v||"(por preencher)");
+      } else if(s.tipo==="lista"){
+        var ls=linhasDe(d[s.id]);
+        if(ls.length) ls.forEach(function(x){L.push("- "+x);}); else L.push("(por preencher)");
+      } else if(s.tipo==="pares"){
+        var arr=(d[s.id]||[]).filter(function(p){return (p.q||"").trim()||(p.r||"").trim();});
+        if(arr.length) arr.forEach(function(p){ L.push("• "+((p.q||"").trim()||"—")); if((p.r||"").trim()) L.push("  → "+p.r.trim()); });
+        else L.push("(por preencher)");
+      }
+      L.push("");
+    });
+    L.push("Ana Marta Soares, Especialista em IA aplicada ao Direito");
+    return L.join("\n");
+  }
+
+  // Vistas
+  function mostrar(qual){
+    var prep=qual==="preparar";
+    el("tab-preparar").setAttribute("aria-selected", prep?"true":"false");
+    el("tab-guiao").setAttribute("aria-selected", prep?"false":"true");
+    el("vista-preparar").hidden=!prep;
+    el("vista-guiao").hidden=prep;
+    if(!prep) gerarGuiao();
+  }
+  el("tab-preparar").addEventListener("click", function(){ mostrar("preparar"); });
+  el("tab-guiao").addEventListener("click", function(){ mostrar("guiao"); });
+
+  // Copiar
+  el("copiar").addEventListener("click", function(){
+    var btn=this, texto=guiaoTexto();
+    function ok(){ btn.textContent="Copiado"; btn.classList.add("done"); setTimeout(function(){btn.textContent="Copiar guião"; btn.classList.remove("done");},1800); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(texto).then(ok).catch(ok); } else { ok(); }
+  });
+
+  // Guardar / carregar no dispositivo
+  var CHAVE="o-guiao-guardados";
+  function lerG(){ try{ return JSON.parse(localStorage.getItem(CHAVE)||"[]"); }catch(e){ return []; } }
+  function escreverG(a){ try{ localStorage.setItem(CHAVE, JSON.stringify(a)); }catch(e){} }
+  function pintarG(){
+    var a=lerG(), box=el("guardados"), ul=el("listaguardados");
+    if(!a.length){ box.hidden=true; return; }
+    box.hidden=false; ul.innerHTML="";
+    a.forEach(function(item,i){
+      var li=document.createElement("li");
+      var load=document.createElement("button"); load.className="load";
+      load.textContent=(item.modo==="reuniao"?"Reunião · ":"Audiência · ")+(item.titulo||"sem título");
+      load.addEventListener("click", function(){
+        estado.modo=item.modo; dados[item.modo]=JSON.parse(JSON.stringify(item.dados));
+        escolherModo(item.modo); mostrar("preparar");
+        window.scrollTo({top:0,behavior:"smooth"});
+      });
+      var del=document.createElement("button"); del.className="del"; del.setAttribute("aria-label","Apagar"); del.textContent="×";
+      del.addEventListener("click", function(){ var arr=lerG(); arr.splice(i,1); escreverG(arr); pintarG(); });
+      li.appendChild(load); li.appendChild(del); ul.appendChild(li);
+    });
+  }
+  el("guardar").addEventListener("click", function(){
+    var d=dados[estado.modo];
+    var arr=lerG();
+    arr.unshift({modo:estado.modo, titulo:(d._titulo||"").trim(), dados:JSON.parse(JSON.stringify(d))});
+    if(arr.length>15) arr=arr.slice(0,15);
+    escreverG(arr); pintarG();
+    var b=this, t=b.textContent; b.textContent="Guardado"; setTimeout(function(){b.textContent=t;},1500);
+  });
+
+  // Arranque
+  escolherModo("reuniao");
+  pintarG();
+
+  // App
+  var adiado=null;
+  window.addEventListener("beforeinstallprompt", function(e){ e.preventDefault(); adiado=e; el("install").hidden=false; });
+  el("install").addEventListener("click", function(){ if(!adiado)return; adiado.prompt(); adiado.userChoice.finally(function(){ adiado=null; el("install").hidden=true; }); });
+  window.addEventListener("appinstalled", function(){ el("install").hidden=true; });
+  if("serviceWorker" in navigator){ window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); }); }
+</script>
+</body>
+</html>
